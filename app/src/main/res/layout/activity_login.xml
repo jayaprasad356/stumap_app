@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".LoginActivity">
+    tools:context=".activitie.LoginActivity">
 
 
 
@@ -28,7 +28,6 @@
             />
 
         <com.google.android.material.textfield.TextInputLayout
-            android:id="@+id/textField"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Mobile"
@@ -36,15 +35,16 @@
             >
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edMobile"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="number"
+                android:maxLength="10"
                 />
 
         </com.google.android.material.textfield.TextInputLayout>
         <com.google.android.material.textfield.TextInputLayout
             android:layout_marginTop="@dimen/_10sdp"
-            android:id="@+id/etPassword"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:hint="Password"
@@ -53,6 +53,7 @@
             >
 
             <com.google.android.material.textfield.TextInputEditText
+                android:id="@+id/edPassword"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:inputType="textPassword"
