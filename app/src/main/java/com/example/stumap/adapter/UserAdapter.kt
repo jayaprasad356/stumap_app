@@ -21,9 +21,12 @@ class UserAdapter(private val userList: ArrayList<User>?) : RecyclerView.Adapter
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val model = userList!![position] as User?
         with(model) {
+            binding.tvid.text = this?.id
             binding.tvName.text = this?.name ?: ""
-            binding.tvLatitude.text = this?.lat ?: ""
-            binding.tvLogtidue.text = this?.long ?: ""
+            binding.tvemail.text = this?.email ?: ""
+            binding.tvMobile.text = this?.mobile ?: ""
+            binding.tvlatitide.text = this?.latitude ?: ""
+            binding.tvlongitude.text = this?.longtitude ?: ""
         }
     }
 }

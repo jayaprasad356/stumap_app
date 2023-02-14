@@ -23,8 +23,19 @@
 
             <TextView
 
+                android:id="@+id/tvid"
+                android:text="1"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_14sdp"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                />
+
+            <TextView
+
                 android:id="@+id/tvName"
-                android:text=""
+                android:text="somename"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/_14sdp"
@@ -35,72 +46,35 @@
 
             <TextView
                 android:id="@+id/tvMobile"
-                android:text=""
+                android:text="somemobile"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:textSize="@dimen/_10sdp"
                 />
 
-
-
-            <RelativeLayout
-                android:layout_marginTop="@dimen/_5sdp"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
-
-                <TextView
-                    android:gravity="left"
-                    android:textSize="@dimen/_10sdp"
-                    android:textColor="@color/black"
-                    android:text="Latitude"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-                <TextView
-                    android:layout_alignParentRight="true"
-                    android:textAlignment="textStart"
-                    android:textSize="@dimen/_10sdp"
-                    android:textColor="@color/black"
-                    android:text="Longtidue"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"/>
-
-
-
-
-            </RelativeLayout>
-
-            <RelativeLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
-
+            <TextView
+                android:id="@+id/tvemail"
+                android:text="somemobile"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10sdp"
+                />
 
             <TextView
-                android:gravity="left"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:id="@+id/tvLatitude"
-                android:text=""
+                android:id="@+id/tvlatitide"
+                android:text="somemobile"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10sdp"
+                />
 
             <TextView
-                android:layout_alignParentRight="true"
-                android:gravity="right"
-                android:textSize="@dimen/_10sdp"
-                android:textStyle="bold"
-                android:textColor="@color/black"
-                android:id="@+id/tvLogtidue"
-                android:text=""
+                android:id="@+id/tvlongitude"
+                android:text="somemobile"
                 android:layout_width="wrap_content"
-                android:layout_height="wrap_content"/>
-
-
-
-
-            </RelativeLayout>
+                android:layout_height="wrap_content"
+                android:textSize="@dimen/_10sdp"
+                />
 
 
 

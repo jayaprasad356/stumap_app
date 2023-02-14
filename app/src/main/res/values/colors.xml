@@ -13,4 +13,5 @@
     <color name="secondary_orage">#ffc6c5</color>
     <color name="secondary_blue">#d1f1fe</color>
     <color name="secondary_green">#d6f4dc</color>
+    <color name="primaryFade">#34FE6752</color>
 </resources>

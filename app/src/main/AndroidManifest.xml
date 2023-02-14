@@ -2,9 +2,13 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION"/>
-    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
+    <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
+    <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
+
     <application
+        android:name=".helper.ApiConfig"
         android:allowBackup="true"
         android:dataExtractionRules="@xml/data_extraction_rules"
         android:fullBackupContent="@xml/backup_rules"
@@ -14,11 +18,11 @@
         android:theme="@style/Theme.StuMap"
         tools:targetApi="31">
         <activity
-            android:name=".activitie.LoginActivity"
+            android:name=".activities.RegisterActivity"
             android:exported="false" />
         <activity
-            android:name=".activitie.RegisterActivity"
-            android:exported="true" >
+            android:name=".activities.LoginActivity"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
@@ -26,9 +30,8 @@
             </intent-filter>
         </activity>
         <activity
-            android:name="MainActivity"
-            android:exported="true">
-        </activity>
+            android:name=".MainActivity"
+            android:exported="true" />
     </application>
 
 </manifest>
