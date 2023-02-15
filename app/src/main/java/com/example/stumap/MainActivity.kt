@@ -1,8 +1,9 @@
 package com.example.stumap
 
 import android.annotation.SuppressLint
+import android.app.Activity
+import android.content.Intent
 import android.content.pm.PackageManager
-import android.os.Build
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -11,18 +12,20 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.annotation.RequiresApi
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.stumap.activities.ProfileActivity
 import com.example.stumap.adapter.UserAdapter
 import com.example.stumap.databinding.ActivityMainBinding
 import com.example.stumap.extras.LocationTrack
 import com.example.stumap.helper.ApiConfig
 import com.example.stumap.helper.Constant
+import com.example.stumap.helper.Constant.SUCCESS
 import com.example.stumap.helper.Session
 import com.google.gson.Gson
 import com.graymatter.stumap.models.User
+import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
@@ -33,10 +36,15 @@ class MainActivity : AppCompatActivity() {
     private lateinit var locationTrack: LocationTrack
     private lateinit var session: Session
     private lateinit var calendar: Calendar
+    var activity: Activity? = null
+
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityMainBinding.inflate(layoutInflater)
         setContentView(binding.root)
+
+        activity = this@MainActivity
 
 
         session = Session(this@MainActivity)
@@ -48,11 +56,92 @@ class MainActivity : AppCompatActivity() {
             this.set(Calendar.YEAR,Calendar.MONTH,Calendar.DAY_OF_MONTH)
         }
 
-        adapter = UserAdapter(data())
-        binding.recycler.let {
-            it.adapter = adapter
-            it.layoutManager = LinearLayoutManager(this@MainActivity)
+
+
+        val latitude = locationTrack.getLatitude().toString()
+        val longitude = locationTrack.getLongitude().toString()
+
+        session.setData(Constant.STARTLAT, latitude)
+        session.setData(Constant.STARTLNG, longitude)
+//
+//        Toast.makeText(activity,""+latitude,Toast.LENGTH_SHORT).show()
+//        Toast.makeText(activity,""+longitude,Toast.LENGTH_SHORT).show()
+
+
+        var search = ""
+
+        try {
+            data(search)
+        } catch (e: Exception) {
+            // Handle the exception here
+            // For example, you could log the error message or show an error dialog to the user
         }
+
+
+//        binding!!.Name.text = session.getData(Constant.NAME)
+//        binding!!.mobile.text = session.getData(Constant.MOBILE)
+
+
+
+        binding!!.ivprofile.setOnClickListener{
+
+            val intent = Intent(activity, ProfileActivity::class.java)
+            startActivity(intent)
+
+        }
+
+
+        binding!!.recycler.setLayoutManager(
+            LinearLayoutManager(
+                activity,
+                LinearLayoutManager.VERTICAL,
+                false
+            )
+        )
+
+
+
+
+        binding.edSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
+
+
+            }
+
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+
+
+                if (binding.edSearch.text.length == 10 ){
+
+                 //   Toast.makeText(activity,""+binding.edSearch.text.toString(),Toast.LENGTH_SHORT).show()
+
+                    var search = binding.edSearch.text.toString()
+                    data(search)
+                }
+
+                else{
+                    var search = ""
+                    data(search)
+
+                }
+            }
+
+            override fun afterTextChanged(s: Editable?) {
+
+
+
+
+
+            }
+
+        })
+
+
+
+
+
+
+
 
         binding.LastUpdatedCv.setOnClickListener {
             when(binding.InfoLyt.visibility) {
@@ -66,44 +155,52 @@ class MainActivity : AppCompatActivity() {
             TransitionManager.beginDelayedTransition(binding.LastUpdatedCv)
         }
 
-        binding.edSearch.addTextChangedListener(object : TextWatcher{
-            override fun beforeTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
 
-            override fun onTextChanged(p0: CharSequence?, p1: Int, p2: Int, p3: Int) {
-            }
-
-            @RequiresApi(Build.VERSION_CODES.N)
-            override fun afterTextChanged(p0: Editable?) {
-                p0.toString().also { _str ->
-                    if(_str.isNotEmpty()) {
-                        binding.btnSearch.visibility = View.VISIBLE
-                    }else{
-                        binding.btnSearch.visibility = View.GONE
-                    }
-                    binding.btnSearch.setOnClickListener {
-                        searchUserWithQuery(_str)
-                    }
-                }
-                }
-
-        })
 
     }
 
-    private fun data(): ArrayList<User> {
-        return arrayListOf(
-            User(
-                "1",
-                "SomeName",
-                "1234567890",
-                "23456890",
-                "gfhfhf",
-                "hfghhhffhgh",
-                "hgfhgfhf"
-            )
-        )
+    @SuppressLint("SuspiciousIndentation")
+    private fun data(search: String) {
+        val params = HashMap<String, String>()
+     params[Constant.SEARCH] = search
+        ApiConfig.RequestToVolley({ result, response ->
+            if (result) {
+                try {
+                    val jsonObject = JSONObject(response)
+                    if (jsonObject.getBoolean(SUCCESS)) {
+                        Log.d("user",response)
+                        val jsonArray: JSONArray = jsonObject.getJSONArray(Constant.DATA)
+                        val g = Gson()
+                        val userList: ArrayList<User> = ArrayList<User>()
+                        for (i in 0 until jsonArray.length()) {
+                            val jsonObject1 = jsonArray.getJSONObject(i)
+                            if (jsonObject1 != null) {
+                                val group: User =
+                                    g.fromJson(jsonObject1.toString(), User::class.java)
+                                userList.add(group)
+                            } else {
+                                break
+                            }
+                        }
+                        val adapter = UserAdapter(this@MainActivity, userList)
+                        binding!!.recycler.setAdapter(adapter)
+                    } else {
+                        Toast.makeText(
+                            activity,
+                            jsonObject.getString(Constant.MESSAGE),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (e: Exception) {
+                    e.printStackTrace()
+                }
+            }
+        }, activity, Constant.SEARCH_USER_URL, params, true)
+
+
     }
+
+
 
     private fun checkPermission() {
         val permission = ContextCompat.checkSelfPermission(
@@ -117,7 +214,9 @@ class MainActivity : AppCompatActivity() {
                 updateLocationToApi(session.getData(Constant.USER_ID)
                     ,locationTrack.getLatitude().toString()
                     ,locationTrack.getLongitude().toString())
-                Toast.makeText(this@MainActivity,locationTrack.getLatitude().toString(),Toast.LENGTH_LONG).show()
+
+
+             //  Toast.makeText(this@MainActivity,locationTrack.getLatitude().toString(),Toast.LENGTH_LONG).show()
             }else{
                 Toast.makeText(this@MainActivity,"unable to get Location",Toast.LENGTH_LONG).show()
             }
@@ -133,6 +232,9 @@ class MainActivity : AppCompatActivity() {
                     updateLocationToApi(session.getData(Constant.USER_ID)
                         ,locationTrack.getLatitude().toString()
                         ,locationTrack.getLongitude().toString())
+
+
+
                 }else{
                     Toast.makeText(this@MainActivity,"unable to get Location",Toast.LENGTH_LONG).show()
                 }}
@@ -165,12 +267,22 @@ class MainActivity : AppCompatActivity() {
                         //TODO : ASSIGN JSONARRAY TO SESSION
                         binding.tvLastUpdated.text = calendar.time.toString()
                         jsonArray.getJSONObject(0).apply {
-                            binding.tvName.text = this.getString(Constant.NAME)
-                            binding.tvMobileNumber.text = this.getString(Constant.MOBILE)
+                            binding.Name.text = this.getString(Constant.NAME)
+                            binding.mobile.text = this.getString(Constant.MOBILE)
                             binding.tvLat.text = session.getData("latitude")
                             binding.tvLang.text = session.getData("longitude")
+
+
+                            Toast.makeText(
+                                activity,
+                                "" + session.getData("latitude"),
+                                Toast.LENGTH_SHORT
+                            ).show()
+
+
+
                         }
-                        Toast.makeText(this,"success",Toast.LENGTH_LONG).show()
+                       // Toast.makeText(this,"success",Toast.LENGTH_LONG).show()
                     } else {
                         Toast.makeText(
                             this,
@@ -191,57 +303,5 @@ class MainActivity : AppCompatActivity() {
         }, this, Constant.LOCATION_URL, params, true)
     }
 
-    @SuppressLint("NotifyDataSetChanged")
-    private fun searchUserWithQuery(query : String) {
 
-        val params : MutableMap<String,String> = hashMapOf()
-
-        params.apply {
-            this["search"] = query.trim()
-        }
-
-        ApiConfig.RequestToVolley({ result, response ->
-            if (result) {
-                try {
-                    val jsonObject = JSONObject(response)
-                    Log.e("response",response.toString())
-                    if (jsonObject.getBoolean(Constant.SUCCESS)) {
-                        val jsonArray = jsonObject.getJSONArray(Constant.DATA)
-                        val gson = Gson()
-
-                        for(i in jsonArray.getString(0).indices) {
-                            val object1 = jsonArray.getJSONObject(i)
-
-                            object1?.let {
-                                val model = gson.fromJson(it.toString(),User::class.java)
-
-                                model?.let {_data ->
-                                    binding.recycler.adapter = UserAdapter(arrayListOf(_data)).also {_adapter ->
-                                        _adapter.notifyDataSetChanged()
-                                    }
-                                    binding.recycler.layoutManager = LinearLayoutManager(this)
-                                }
-                            }
-
-                        }
-                        Toast.makeText(this,"user found",Toast.LENGTH_LONG).show()
-                    } else {
-                        Toast.makeText(
-                            this,
-                            "" + jsonObject.getString(Constant.MESSAGE),
-                            Toast.LENGTH_SHORT
-                        ).show()
-                    }
-                } catch (e: JSONException) {
-                    e.printStackTrace()
-                }
-            } else {
-                Toast.makeText(
-                    this,
-                    java.lang.String.valueOf(response) + java.lang.String.valueOf(result),
-                    Toast.LENGTH_SHORT
-                ).show()
-            }
-        }, this, Constant.SEARCH_USER_URL, params, true)
-    }
 }

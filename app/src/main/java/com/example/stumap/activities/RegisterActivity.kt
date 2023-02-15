@@ -1,11 +1,10 @@
 package com.example.stumap.activities
 
 import android.content.Intent
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.util.Patterns
 import android.widget.Toast
-import com.example.stumap.MainActivity
+import androidx.appcompat.app.AppCompatActivity
 import com.example.stumap.databinding.ActivityRegisterBinding
 import com.example.stumap.helper.ApiConfig
 import com.example.stumap.helper.Constant
@@ -15,9 +14,14 @@ import org.json.JSONObject
 
 class RegisterActivity : AppCompatActivity() {
     private lateinit var binding: ActivityRegisterBinding
+    private lateinit var session: Session
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         binding = ActivityRegisterBinding.inflate(layoutInflater)
+
+        session = Session(this@RegisterActivity)
+
         setContentView(binding.root)
         binding.btnRegister.setOnClickListener {
             when {
@@ -69,6 +73,10 @@ class RegisterActivity : AppCompatActivity() {
                 try {
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getBoolean(Constant.SUCCESS)) {
+                        session.setData(Constant.NAME, binding.edname.text.toString())
+                        session.setData(Constant.MOBILE, binding.edMobile.text.toString())
+
+
                         val jsonArray = jsonObject.getJSONArray(Constant.DATA)
                         //TODO : ASSIGN JSONARRAY TO SESSION
                         startActivity(

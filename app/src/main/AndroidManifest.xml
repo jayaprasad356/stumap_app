@@ -17,21 +17,47 @@
         android:supportsRtl="true"
         android:theme="@style/Theme.StuMap"
         tools:targetApi="31">
+
+        <meta-data
+            android:name="com.google.android.geo.API_KEY"
+            android:value="AIzaSyBnV04GzHyCF5rFkNhV7-8x2JCbWvlSNFU" />
+
+        <activity
+            android:name=".activities.MapActivity"
+            android:exported="false">
+
+
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
+        <activity
+            android:name=".activities.ProfileActivity"
+            android:exported="false">
+            <meta-data
+                android:name="android.app.lib_name"
+                android:value="" />
+        </activity>
         <activity
             android:name=".activities.RegisterActivity"
             android:exported="false" />
         <activity
             android:name=".activities.LoginActivity"
             android:exported="true">
+
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
 
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+
+
         </activity>
         <activity
             android:name=".MainActivity"
             android:exported="true" />
+
+
     </application>
 
 </manifest>

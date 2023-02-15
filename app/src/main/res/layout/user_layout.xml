@@ -2,6 +2,7 @@
 <LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:layout_marginTop="@dimen/_10sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
 
@@ -61,6 +62,7 @@
                 />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tvlatitide"
                 android:text="somemobile"
                 android:layout_width="wrap_content"
@@ -69,6 +71,7 @@
                 />
 
             <TextView
+                android:visibility="gone"
                 android:id="@+id/tvlongitude"
                 android:text="somemobile"
                 android:layout_width="wrap_content"
@@ -80,6 +83,19 @@
 
 
         </LinearLayout>
+
+
+
+        <Button
+            android:id="@+id/btnViewlocation"
+            android:textAllCaps="false"
+            android:layout_margin="@dimen/_10sdp"
+            android:layout_gravity="right|bottom"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:text="View Location"
+            android:textSize="@dimen/_8sdp"
+            />
 
 
 

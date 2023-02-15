@@ -1,32 +1,59 @@
 package com.example.stumap.adapter
 
+import android.app.Activity
+import android.content.Intent
 import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
+import android.widget.Button
+import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
-import com.example.stumap.databinding.UserLayoutBinding
+import com.example.stumap.MainActivity
+import com.example.stumap.R
+import com.example.stumap.activities.MapActivity
+import com.example.stumap.activities.ProfileActivity
+import com.example.stumap.helper.Constant
 import com.graymatter.stumap.models.User
 
-class UserAdapter(private val userList: ArrayList<User>?) : RecyclerView.Adapter<UserAdapter.ViewHolder>() {
 
-    private lateinit var binding: UserLayoutBinding
+class UserAdapter( userList1: MainActivity, private val userList: List<User>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>()
 
-    inner class ViewHolder(binding: UserLayoutBinding) : RecyclerView.ViewHolder(binding.root)
+{
 
-    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
-        binding = UserLayoutBinding.inflate(LayoutInflater.from(parent.context),parent,false)
-        return ViewHolder(binding)
+    inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
+
+        val name: TextView = itemView.findViewById(R.id.tvName)
+        val email: TextView = itemView.findViewById(R.id.tvemail)
+        val id: TextView = itemView.findViewById(R.id.tvid)
+        val tvMobile: TextView = itemView.findViewById(R.id.tvMobile)
+        val tvlatitide: TextView = itemView.findViewById(R.id.tvlatitide)
+        val tvlongitude: TextView = itemView.findViewById(R.id.tvlongitude)
+        val btnViewlocation: Button = itemView.findViewById(R.id.btnViewlocation)
     }
-    override fun getItemCount(): Int = userList?.size ?: 0
 
-    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
-        val model = userList!![position] as User?
-        with(model) {
-            binding.tvid.text = this?.id
-            binding.tvName.text = this?.name ?: ""
-            binding.tvemail.text = this?.email ?: ""
-            binding.tvMobile.text = this?.mobile ?: ""
-            binding.tvlatitide.text = this?.latitude ?: ""
-            binding.tvlongitude.text = this?.longtitude ?: ""
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): UserViewHolder {
+        val itemView = LayoutInflater.from(parent.context).inflate(R.layout.user_layout, parent, false)
+        return UserViewHolder(itemView)
+    }
+
+    override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
+        val currentUser = userList[position]
+        holder.name.text = currentUser.name
+        holder.email.text = currentUser.email
+        holder.id.text = currentUser.id
+        holder.tvMobile.text = currentUser.mobile
+        holder.tvlongitude.text = currentUser.longtitude
+        holder.tvlatitide.text = currentUser.latitude
+
+        holder.btnViewlocation.setOnClickListener { view ->
+            val intent = Intent(view.context, MapActivity::class.java).apply {
+                putExtra(Constant.DESTINATIONLAT , currentUser.latitude)
+                putExtra(Constant.DESTINATIONLNG , currentUser.longtitude)
+            }
+            view.context.startActivity(intent)
         }
+
     }
+
+    override fun getItemCount() = userList.size
 }

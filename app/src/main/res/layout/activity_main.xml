@@ -32,10 +32,71 @@
                 android:textSize="@dimen/_14sdp"
                 />
 
+
+            <ImageView
+                android:id="@+id/ivprofile"
+                android:layout_width="@dimen/_22sdp"
+                android:layout_height="@dimen/_22sdp"
+                android:layout_alignParentRight="true"
+                android:background="@drawable/ic_baseline_person_24"
+                android:backgroundTint="@color/white"
+                />
+
         </RelativeLayout>
 
 
+        <LinearLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:orientation="vertical"
+            android:layout_marginHorizontal="@dimen/_10sdp"
+            android:layout_marginBottom="@dimen/_2sdp"
+
+            >
+
+
+            <TextView
+                android:textSize="@dimen/_12sdp"
+                android:textColor="@color/black"
+                android:id="@+id/Name"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+
+            <TextView
+                android:textSize="@dimen/_10sdp"
+                android:textColor="@color/black"
+                android:id="@+id/mobile"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"/>
+
+            <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentStart="true"
+                android:text="Last updated"
+                android:textColor="@color/black"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginTop="@dimen/_10sdp"
+                 />
+
+            <TextView
+                android:id="@+id/tvLastUpdated"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:layout_marginStart="@dimen/_5sdp"
+                android:layout_marginEnd="20dp"
+                android:text=""
+                android:textColor="@color/black"
+                android:textStyle="bold" />
+
+
+        </LinearLayout>
+
+
         <androidx.cardview.widget.CardView
+            android:visibility="gone"
             android:id="@+id/LastUpdatedCv"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
@@ -47,36 +108,18 @@
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:orientation="vertical">
+                android:orientation="vertical"
+                android:padding="@dimen/_10sdp">
+
+
+
                 <RelativeLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:orientation="horizontal">
 
-                    <TextView
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentStart="true"
-                        android:layout_centerInParent="true"
-                        android:layout_gravity="center"
-                        android:layout_marginStart="20dp"
-                        android:text="Last updated"
-                        android:layout_marginVertical="20dp"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
 
-                    <TextView
-                        android:id="@+id/tvLastUpdated"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_alignParentEnd="true"
-                        android:layout_centerInParent="true"
-                        android:layout_gravity="center|end"
-                        android:layout_marginStart="10dp"
-                        android:layout_marginEnd="20dp"
-                        android:text="12:30 Feb 13"
-                        android:textColor="@color/black"
-                        android:textStyle="bold" />
+
                 </RelativeLayout>
 
                 <LinearLayout
@@ -187,15 +230,7 @@
             android:drawableEnd="@drawable/ic_baseline_search_24"
             />
 
-        <Button
-            android:id="@+id/btnSearch"
-            android:layout_width="match_parent"
-            android:layout_height="50dp"
-            android:visibility="gone"
-            android:backgroundTint="@color/primary"
-            android:layout_marginHorizontal="30dp"
-            android:layout_marginTop="10dp"
-            android:text="Search"/>
+
 
 
 
@@ -207,14 +242,13 @@
             android:textSize="@dimen/_10sdp"
             android:textStyle="bold"
             android:textColor="@color/black"
-            android:layout_marginTop="@dimen/_30sdp"
+            android:layout_marginTop="@dimen/_10sdp"
             />
 
 
         <androidx.recyclerview.widget.RecyclerView
             android:layout_marginHorizontal="@dimen/_10sdp"
             android:id="@+id/recycler"
-            android:layout_marginTop="@dimen/_10sdp"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 

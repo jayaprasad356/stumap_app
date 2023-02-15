@@ -1,5 +1,8 @@
 package com.example.stumap.helper;
 
+import org.jetbrains.annotations.NotNull;
+import org.jetbrains.annotations.Nullable;
+
 public class Constant {
     public static final String MainBaseUrl = "https://stumap.graymatterworks.com/";
     //public static final String MainBaseUrl = "http://192.168.43.38/autobot/";
@@ -149,4 +152,8 @@ public class Constant {
     public static final String STATUS = "status";
     public static final String FALSE = "false";
     public static final String TRUE = "true";
+    public static final String DESTINATIONLAT = "destinationLng ";
+    public static final String DESTINATIONLNG = "destinationlng ";
+    public static final String STARTLAT =  "startLat";
+    public static final String STARTLNG =  "startLng";
 }
