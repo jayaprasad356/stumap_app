@@ -254,4 +254,28 @@
 
     </LinearLayout>
 
+
+    <RelativeLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="@dimen/_60sdp"
+        android:layout_marginRight="@dimen/_10sdp"
+        android:layout_alignParentRight="true"
+
+        >
+
+        <Button
+            android:id="@+id/fab"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:src="@drawable/ic_baseline_logout_24"
+            android:backgroundTint="@color/primary"
+            android:text="Log out"
+            android:textAllCaps="false"
+            />
+
+
+    </RelativeLayout>
+
+
 </RelativeLayout>

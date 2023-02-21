@@ -15,6 +15,7 @@ import androidx.activity.result.contract.ActivityResultContracts
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.LinearLayoutManager
+import com.example.stumap.activities.LoginActivity
 import com.example.stumap.activities.ProfileActivity
 import com.example.stumap.adapter.UserAdapter
 import com.example.stumap.databinding.ActivityMainBinding
@@ -50,6 +51,17 @@ class MainActivity : AppCompatActivity() {
         session = Session(this@MainActivity)
 
         checkPermission()
+        user_detail()
+
+
+        binding.fab.setOnClickListener(
+            //logout session
+            View.OnClickListener {
+                session.logoutUser(activity)
+                val intent = Intent(activity, LoginActivity::class.java)
+                startActivity(intent)
+            }
+        )
 
         calendar = Calendar.getInstance()
         calendar.apply {
@@ -267,17 +279,15 @@ class MainActivity : AppCompatActivity() {
                         //TODO : ASSIGN JSONARRAY TO SESSION
                         binding.tvLastUpdated.text = calendar.time.toString()
                         jsonArray.getJSONObject(0).apply {
-                            binding.Name.text = this.getString(Constant.NAME)
-                            binding.mobile.text = this.getString(Constant.MOBILE)
                             binding.tvLat.text = session.getData("latitude")
                             binding.tvLang.text = session.getData("longitude")
 
 
-                            Toast.makeText(
-                                activity,
-                                "" + session.getData("latitude"),
-                                Toast.LENGTH_SHORT
-                            ).show()
+//                            Toast.makeText(
+//                                activity,
+//                                "" + session.getData("latitude"),
+//                                Toast.LENGTH_SHORT
+//                            ).show()
 
 
 
@@ -301,6 +311,51 @@ class MainActivity : AppCompatActivity() {
                 ).show()
             }
         }, this, Constant.LOCATION_URL, params, true)
+    }
+
+
+    private fun user_detail(vararg a: String) {
+        val params: MutableMap<String, String> = hashMapOf()
+
+        params.apply {
+            this[Constant.USER_ID] = session.getData(Constant.USER_ID)
+        }
+
+        ApiConfig.RequestToVolley({ result, response ->
+            if (result) {
+                try {
+                    val jsonObject = JSONObject(response)
+                    if (jsonObject.getBoolean(Constant.SUCCESS)) {
+
+
+
+
+                        val jsonArray = jsonObject.getJSONArray(Constant.DATA)
+
+                        binding.Name.setText(jsonArray.getJSONObject(0).getString(Constant.NAME))
+                        binding.mobile.setText(jsonArray.getJSONObject(0).getString(Constant.MOBILE))
+
+
+                        //TODO : ASSIGN JSONARRAY TO SESSION
+
+                    } else {
+                        Toast.makeText(
+                            this,
+                            "" + jsonObject.getString(Constant.MESSAGE),
+                            Toast.LENGTH_SHORT
+                        ).show()
+                    }
+                } catch (e: JSONException) {
+                    e.printStackTrace()
+                }
+            } else {
+                Toast.makeText(
+                    this,
+                    java.lang.String.valueOf(response) + java.lang.String.valueOf(result),
+                    Toast.LENGTH_SHORT
+                ).show()
+            }
+        }, this, Constant.USER_DETAIL, params, true)
     }
 
 

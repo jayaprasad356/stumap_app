@@ -5,6 +5,7 @@ import android.content.Context;
 import android.content.Intent;
 import android.content.SharedPreferences;
 
+import com.example.stumap.activities.LoginActivity;
 
 
 public class Session {
@@ -47,9 +48,9 @@ public class Session {
     }
 
 
-    /*
+
     public void logoutUser(Activity activity) {
-        Intent i = new Intent(activity, MainActivity.class);
+        Intent i = new Intent(activity, LoginActivity.class);
         i.addFlags(Intent.FLAG_ACTIVITY_CLEAR_TASK);
         i.addFlags(Intent.FLAG_ACTIVITY_NEW_TASK);
         activity.startActivity(i);
@@ -61,7 +62,7 @@ public class Session {
 
     }
 
-     */
+
     public boolean getBoolean(String id) {
         return pref.getBoolean(id, false);
     }

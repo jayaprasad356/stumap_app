@@ -23,6 +23,7 @@ public class Constant {
     public static final String SERVICE_LIST = BaseUrl + "serviceslist.php";
     public static final String SLIDES_LIST = BaseUrl + "slidelist.php";
     public static final String ORDERS_LIST = BaseUrl + "orderlist.php";
+    public static final String UPDATE_PROFILE = BaseUrl + "update_profile.php";
     public static final String NOTIFICATION_LIST = BaseUrl + "notification-list.php";
     public static final String ORDERS = BaseUrl + "orders.php";
     public static final String SERVICES = BaseUrl + "services.php";
@@ -32,6 +33,7 @@ public class Constant {
     public static final String SHOWROOM_LOGIN = BaseUrl + "showroom_login.php";
     public static final String LOCATION_URL = BaseUrl + "location.php";
     public static final String SEARCH_USER_URL = BaseUrl + "searchuser.php";
+    public static final String USER_DETAIL = BaseUrl + "user_details.php";
 
     public static final String USED_VEHICLESLIST_URL = BaseUrl + "usedvehicleslist.php";
     public static final String BIKE_LIST = BaseUrl + "bikeslist.php";
@@ -88,6 +90,7 @@ public class Constant {
     public static final String PACKAGE_PRICE = "package_price";
     public static final String DESCRIPTION = "description";
     public static final String EMAIL = "email";
+    public static final String PASSWORD = "password";
     public static final String VIDEO = "video";
     public static final String NAME = "name";
     public static final String BIKE_NAME = "bike_name";

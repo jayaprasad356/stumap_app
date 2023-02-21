@@ -2,9 +2,11 @@ package com.example.stumap.activities
 
 import android.content.Intent
 import android.os.Bundle
+import android.provider.Telephony.Carriers.PASSWORD
 import android.util.Patterns
 import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
+import com.example.stumap.MainActivity
 import com.example.stumap.databinding.ActivityRegisterBinding
 import com.example.stumap.helper.ApiConfig
 import com.example.stumap.helper.Constant
@@ -75,8 +77,8 @@ class RegisterActivity : AppCompatActivity() {
                     if (jsonObject.getBoolean(Constant.SUCCESS)) {
                         session.setData(Constant.NAME, binding.edname.text.toString())
                         session.setData(Constant.MOBILE, binding.edMobile.text.toString())
-
-
+                        session.setData(Constant.EMAIL, binding.edEmail.text.toString())
+                        session.setData(Constant.PASSWORD, binding.edPassword.text.toString())
                         val jsonArray = jsonObject.getJSONArray(Constant.DATA)
                         //TODO : ASSIGN JSONARRAY TO SESSION
                         startActivity(
