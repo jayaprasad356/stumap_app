@@ -14,11 +14,12 @@ import com.example.stumap.activities.MapActivity
 import com.example.stumap.activities.ProfileActivity
 import com.example.stumap.helper.Constant
 import com.graymatter.stumap.models.User
+import kotlin.reflect.typeOf
 
 
-class UserAdapter( userList1: MainActivity, private val userList: List<User>) : RecyclerView.Adapter<UserAdapter.UserViewHolder>()
-
+class UserAdapter( userList1: Activity, private val userList: List<User>,private val type:String) : RecyclerView.Adapter<UserAdapter.UserViewHolder>()
 {
+
 
     inner class UserViewHolder(itemView: View) : RecyclerView.ViewHolder(itemView) {
 
@@ -38,6 +39,7 @@ class UserAdapter( userList1: MainActivity, private val userList: List<User>) : 
 
     override fun onBindViewHolder(holder: UserViewHolder, position: Int) {
         val currentUser = userList[position]
+
         holder.name.text = currentUser.name
         holder.email.text = currentUser.email
         holder.id.text = currentUser.id
@@ -45,6 +47,9 @@ class UserAdapter( userList1: MainActivity, private val userList: List<User>) : 
         holder.tvlongitude.text = currentUser.longtitude
         holder.tvlatitide.text = currentUser.latitude
 
+        if (type.equals("send")){
+            holder.btnViewlocation.text="Send Request"
+        }
         holder.btnViewlocation.setOnClickListener { view ->
             val intent = Intent(view.context, MapActivity::class.java).apply {
                 putExtra(Constant.DESTINATIONLAT , currentUser.latitude)

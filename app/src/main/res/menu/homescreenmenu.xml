@@ -1,0 +1,18 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+
+
+    <item
+        android:id="@+id/Home"
+        android:icon="@drawable/baseline_home_24"
+        android:title="Home" />
+
+    <item
+        android:id="@+id/FindFriends"
+        android:icon="@drawable/ic_baseline_person_24"
+        android:title="Find Friends"/>
+    <item
+        android:id="@+id/RequestFriends"
+        android:icon="@drawable/find_friend_24"
+        android:title="Request"/>
+</menu>

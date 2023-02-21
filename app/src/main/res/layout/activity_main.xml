@@ -6,8 +6,13 @@
     android:layout_height="match_parent"
     tools:context=".MainActivity">
 
-
+    <FrameLayout
+        android:id="@+id/Container"
+        android:layout_above="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"/>
     <LinearLayout
+        android:visibility="gone"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:orientation="vertical"
@@ -256,6 +261,7 @@
 
 
     <RelativeLayout
+        android:visibility="gone"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/_60sdp"
@@ -277,5 +283,16 @@
 
     </RelativeLayout>
 
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottomNavigation"
+        android:layout_width="match_parent"
+        android:layout_height="@dimen/_50sdp"
+        android:layout_alignParentBottom="true"
+        app:elevation="@dimen/_7sdp"
+        app:itemIconSize="@dimen/_25sdp"
+        app:itemRippleColor="@color/primary"
+        app:itemTextColor="@color/primary"
+        app:labelVisibilityMode="selected"
+        app:menu="@menu/homescreenmenu"></com.google.android.material.bottomnavigation.BottomNavigationView>
 
 </RelativeLayout>
