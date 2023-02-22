@@ -3,6 +3,8 @@ package com.example.stumap
 import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
+import android.text.Editable
+import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -14,6 +16,7 @@ import com.example.stumap.adapter.UserAdapter
 import com.example.stumap.databinding.FragmentFindFriendsBinding
 import com.example.stumap.helper.ApiConfig
 import com.example.stumap.helper.Constant
+import com.example.stumap.helper.Session
 import com.google.gson.Gson
 import com.graymatter.stumap.models.User
 import org.json.JSONArray
@@ -23,40 +26,53 @@ import java.util.HashMap
 
 
 class FindFriendsFragment : Fragment() {
-lateinit var binding:FragmentFindFriendsBinding
-lateinit var activity: Activity;
+    lateinit var binding: FragmentFindFriendsBinding
+    lateinit var activity: Activity
+    lateinit var session: Session
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View? {
+    ): View {
         // Inflate the layout for this fragment
         binding = FragmentFindFriendsBinding.inflate(inflater, container, false)
-        activity= requireActivity()
-        data("")
+        activity = requireActivity()
+        session = Session(activity)
+        findFriendsApi("")
 
-        binding!!.recycler.setLayoutManager(
-            LinearLayoutManager(
-                activity,
-                LinearLayoutManager.VERTICAL,
-                false
-            )
+        binding.recycler.layoutManager = LinearLayoutManager(
+            activity,
+            LinearLayoutManager.VERTICAL,
+            false
         )
+        binding.edSearch.addTextChangedListener(object : TextWatcher {
+            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+                if (binding.edSearch.text.length == 10) {
+                    val mobile = binding.edSearch.text.toString()
+                    findFriendsApi(mobile)
+                } else {
+                    findFriendsApi("")
+                }
+            }
 
-
+            override fun afterTextChanged(s: Editable?) {}
+        })
 
         return binding.root
 
     }
+
     @SuppressLint("SuspiciousIndentation")
-    private fun data(search: String) {
+    private fun findFriendsApi(mobile: String) {
         val params = HashMap<String, String>()
-        params[Constant.SEARCH] = search
+        params[Constant.USER_ID] = session.getData(Constant.USER_ID)
+        params[Constant.SEARCH] = mobile
         ApiConfig.RequestToVolley({ result, response ->
             if (result) {
                 try {
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getBoolean(Constant.SUCCESS)) {
-                        Log.d("user",response)
+                        Log.d("user", response)
                         val jsonArray: JSONArray = jsonObject.getJSONArray(Constant.DATA)
                         val g = Gson()
                         val userList: ArrayList<User> = ArrayList<User>()
@@ -70,8 +86,8 @@ lateinit var activity: Activity;
                                 break
                             }
                         }
-                        val adapter = UserAdapter(activity, userList,"send")
-                        binding!!.recycler.setAdapter(adapter)
+                        val adapter = UserAdapter(activity, userList, "send")
+                        binding.recycler.adapter = adapter
                     } else {
                         Toast.makeText(
                             activity,
@@ -83,9 +99,6 @@ lateinit var activity: Activity;
                     e.printStackTrace()
                 }
             }
-        }, activity, Constant.SEARCH_USER_URL, params, true)
-
-
+        }, activity, Constant.USER_LIST_URL, params, true)
     }
-
 }

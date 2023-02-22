@@ -105,7 +105,7 @@ class MainActivity : AppCompatActivity() {
         var search = ""
 
         try {
-            data(search)
+           // data(search)
         } catch (e: Exception) {
             // Handle the exception here
             // For example, you could log the error message or show an error dialog to the user
@@ -222,7 +222,7 @@ class MainActivity : AppCompatActivity() {
                     e.printStackTrace()
                 }
             }
-        }, activity, Constant.SEARCH_USER_URL, params, true)
+        }, activity, Constant.USER_LIST_URL, params, true)
 
 
     }

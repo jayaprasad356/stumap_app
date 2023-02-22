@@ -5,8 +5,6 @@ import android.app.Activity
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.transition.TransitionManager
 import android.util.Log
 import androidx.fragment.app.Fragment
@@ -15,25 +13,27 @@ import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
 import androidx.activity.result.contract.ActivityResultContracts
+import androidx.core.app.ActivityCompat
 import androidx.core.content.ContextCompat
+import androidx.fragment.app.FragmentActivity
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stumap.activities.LoginActivity
 import com.example.stumap.activities.ProfileActivity
 import com.example.stumap.adapter.UserAdapter
-import com.example.stumap.databinding.ActivityMainBinding
-import com.example.stumap.databinding.FragmentFindFriendsBinding
 import com.example.stumap.databinding.FragmentHomeBinding
 import com.example.stumap.extras.LocationTrack
 import com.example.stumap.helper.ApiConfig
 import com.example.stumap.helper.Constant
 import com.example.stumap.helper.Session
+import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.gson.Gson
 import com.graymatter.stumap.models.User
 import org.json.JSONArray
 import org.json.JSONException
 import org.json.JSONObject
 import java.util.*
-
+import android.Manifest
+import com.google.android.gms.location.LocationServices
 
 class HomeFragment : Fragment() {
 
@@ -42,6 +42,9 @@ class HomeFragment : Fragment() {
     private lateinit var locationTrack: LocationTrack
     private lateinit var session: Session
     private lateinit var calendar: Calendar
+    private lateinit var timer: Timer
+    private lateinit var fusedLocationClient: FusedLocationProviderClient
+
     var activity: Activity? = null
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -51,13 +54,21 @@ class HomeFragment : Fragment() {
         binding = FragmentHomeBinding.inflate(inflater, container, false)
         activity= requireActivity()
         session = Session(getActivity())
-checkPermission()
+        fusedLocationClient = LocationServices.getFusedLocationProviderClient(getActivity())
+
+        checkPermission()
+        locationTrack = LocationTrack((activity as FragmentActivity).applicationContext) // Create a single instance of LocationTrack
+
+        timer = Timer()
+        timer.scheduleAtFixedRate(object : TimerTask() {
+            override fun run() {
+                getLocation()
+            }
+        }, 0, 15000)
         user_detail()
-      //  gpslocation()
 
 
         binding.fab.setOnClickListener(
-            //logout session
             View.OnClickListener {
                 session.logoutUser(activity)
                 val intent = Intent(activity, LoginActivity::class.java)
@@ -70,22 +81,14 @@ checkPermission()
             this.set(Calendar.YEAR,Calendar.MONTH,Calendar.DAY_OF_MONTH)
         }
 
-
-
         val latitude = locationTrack.getLatitude().toString()
         val longitude = locationTrack.getLongitude().toString()
 
         session.setData(Constant.STARTLAT, latitude)
         session.setData(Constant.STARTLNG, longitude)
-//
-//        Toast.makeText(activity,""+latitude,Toast.LENGTH_SHORT).show()
-//        Toast.makeText(activity,""+longitude,Toast.LENGTH_SHORT).show()
-
-
-        var search = ""
 
         try {
-            data(search)
+            myFriendsList()
         } catch (e: Exception) {
             // Handle the exception here
             // For example, you could log the error message or show an error dialog to the user
@@ -108,40 +111,6 @@ checkPermission()
             )
         )
 
-        binding.edSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {
-
-
-            }
-
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-
-
-                if (binding.edSearch.text.length == 10 ){
-
-                    //   Toast.makeText(activity,""+binding.edSearch.text.toString(),Toast.LENGTH_SHORT).show()
-
-                    var search = binding.edSearch.text.toString()
-                    data(search)
-                }
-
-                else{
-                    var search = ""
-                    data(search)
-
-                }
-            }
-
-            override fun afterTextChanged(s: Editable?) {
-
-
-
-
-
-            }
-
-        })
-
         binding.LastUpdatedCv.setOnClickListener {
             when(binding.InfoLyt.visibility) {
                 View.VISIBLE -> {
@@ -156,9 +125,10 @@ checkPermission()
         return binding.root
     }
     @SuppressLint("SuspiciousIndentation")
-    private fun data(search: String) {
+    private fun myFriendsList() {
         val params = HashMap<String, String>()
-        params[Constant.SEARCH] = search
+        params[Constant.USER_ID]=session.getData(Constant.USER_ID)
+     //   params[Constant.SEARCH] = search
         ApiConfig.RequestToVolley({ result, response ->
             if (result) {
                 try {
@@ -191,7 +161,7 @@ checkPermission()
                     e.printStackTrace()
                 }
             }
-        }, activity, Constant.SEARCH_USER_URL, params, true)
+        }, activity, Constant.MY_FRIENDLIST_URL, params, true)
 
 
     }
@@ -284,7 +254,6 @@ checkPermission()
     }
     private fun updateLocationToApi(vararg data : String) {
         val params : MutableMap<String,String> = hashMapOf()
-
         session.apply {
             this.setData("latitude",data[1])
             this.setData("longitude",data[2])
@@ -338,18 +307,42 @@ checkPermission()
             }
         }, activity, Constant.LOCATION_URL, params, true)
     }
-    private fun gpslocation() {
-        if (locationTrack.canGetLocation()) {
-            val longitude = locationTrack.getLongitude()
-            val latitude = locationTrack.getLatitude()
-            Toast.makeText(
-                activity, """
-     Longitude:${java.lang.Double.toString(longitude)}
-     Latitude:${java.lang.Double.toString(latitude)}
-     """.trimIndent(), Toast.LENGTH_SHORT
-            ).show()
+    override fun onDestroy() {
+        super.onDestroy()
+
+        timer.cancel()
+    }
+
+    private fun getLocation() {
+        if (ContextCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+            fusedLocationClient.lastLocation.addOnSuccessListener { location ->
+                // Got last known location. In some rare situations this can be null.
+                if (location != null) {
+                    val latitude = location.latitude
+                    val longitude = location.longitude
+                    updateLocationToApi(session.getData(Constant.USER_ID)
+                        , latitude.toString()
+                        , longitude.toString()
+                    )
+                    Log.d("MainActivity", "Latitude: $latitude, Longitude: $longitude")
+                    // Implement your logic with the latitude and longitude values here
+                }
+            }
         } else {
-            locationTrack.showSettingsAlert()
+            // Permission is not granted. Request the permission.
+            ActivityCompat.requestPermissions(requireActivity(), arrayOf(Manifest.permission.ACCESS_FINE_LOCATION), PERMISSION_REQUEST_CODE)
         }
+    }
+
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        if (requestCode == PERMISSION_REQUEST_CODE) {
+            if ((grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)) {
+                getLocation()
+            }
+        }
+    }
+
+    companion object {
+        private const val PERMISSION_REQUEST_CODE = 1
     }
 }

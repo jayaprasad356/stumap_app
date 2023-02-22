@@ -216,20 +216,7 @@ tools:context=".HomeFragment">
         </LinearLayout>
     </androidx.cardview.widget.CardView>
 
-    <EditText
-        android:id="@+id/edSearch"
-        android:layout_marginHorizontal="@dimen/_10sdp"
-        android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:hint="Search"
-        android:text=""
-        android:textColor="@color/black"
-        android:textColorHint="@color/black"
-        android:padding="@dimen/_10sdp"
-        android:background="@drawable/bg_search"
-        android:layout_marginTop="@dimen/_10sdp"
-        android:drawableEnd="@drawable/ic_baseline_search_24"
-        />
+
 
 
 
