@@ -72,6 +72,9 @@ class MainActivity : AppCompatActivity() {
                 R.id.RequestFriends -> fm!!.beginTransaction()
                     .replace(R.id.Container, RequestFragment())
                     .commitAllowingStateLoss()
+                R.id.MyFriends -> fm!!.beginTransaction()
+                    .replace(R.id.Container, MyFriendsFragment())
+                    .commitAllowingStateLoss()
 
             }
             true
@@ -209,7 +212,7 @@ class MainActivity : AppCompatActivity() {
                                 break
                             }
                         }
-                        val adapter = activity?.let { UserAdapter(it, userList, "view") }
+                        val adapter = activity?.let { UserAdapter(it, userList, "view"){} }
                         binding!!.recycler.setAdapter(adapter)
                     } else {
                         Toast.makeText(

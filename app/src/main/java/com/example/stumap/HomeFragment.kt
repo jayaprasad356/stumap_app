@@ -148,7 +148,7 @@ class HomeFragment : Fragment() {
                                 break
                             }
                         }
-                        val adapter = getActivity()?.let { UserAdapter(it, userList,"view") }
+                        val adapter = getActivity()?.let { UserAdapter(it, userList,"view"){} }
                         binding!!.recycler.setAdapter(adapter)
                     } else {
                         Toast.makeText(

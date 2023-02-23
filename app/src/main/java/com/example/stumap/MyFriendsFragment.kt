@@ -1,10 +1,7 @@
 package com.example.stumap
 
-import android.annotation.SuppressLint
 import android.app.Activity
 import android.os.Bundle
-import android.text.Editable
-import android.text.TextWatcher
 import android.util.Log
 import androidx.fragment.app.Fragment
 import android.view.LayoutInflater
@@ -13,7 +10,8 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.stumap.adapter.UserAdapter
-import com.example.stumap.databinding.FragmentFindFriendsBinding
+import com.example.stumap.databinding.FragmentHomeBinding
+import com.example.stumap.databinding.FragmentMyFriendsBinding
 import com.example.stumap.helper.ApiConfig
 import com.example.stumap.helper.Constant
 import com.example.stumap.helper.Session
@@ -25,54 +23,38 @@ import java.util.ArrayList
 import java.util.HashMap
 
 
-class FindFriendsFragment : Fragment() {
-    lateinit var binding: FragmentFindFriendsBinding
-    lateinit var activity: Activity
+class MyFriendsFragment : Fragment() {
+    private var _binding : FragmentMyFriendsBinding? = null
+    var activity: Activity? = null
     lateinit var session: Session
+
+
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
-    ): View {
-        // Inflate the layout for this fragment
-        binding = FragmentFindFriendsBinding.inflate(inflater, container, false)
-        activity = requireActivity()
-        session = Session(activity)
-        findFriendsApi("")
-
-        binding.recycler.layoutManager = LinearLayoutManager(
+    ): View? {
+        _binding = FragmentMyFriendsBinding.inflate(inflater, container, false)
+        activity= requireActivity()
+        session = Session(getActivity())
+        _binding!!.recycler.layoutManager = LinearLayoutManager(
             activity,
             LinearLayoutManager.VERTICAL,
             false
         )
-        binding.edSearch.addTextChangedListener(object : TextWatcher {
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if (binding.edSearch.text.length == 10) {
-                    val mobile = binding.edSearch.text.toString()
-                    findFriendsApi(mobile)
-                } else {
-                    findFriendsApi("")
-                }
-            }
+        myFriendsList()
 
-            override fun afterTextChanged(s: Editable?) {}
-        })
-
-        return binding.root
-
+        return _binding!!.root
     }
-
-    @SuppressLint("SuspiciousIndentation")
-    private fun findFriendsApi(mobile: String) {
+    private fun myFriendsList() {
         val params = HashMap<String, String>()
-        params[Constant.USER_ID] = session.getData(Constant.USER_ID)
-        params[Constant.SEARCH] = mobile
+        params[Constant.USER_ID]=session.getData(Constant.USER_ID)
+        //   params[Constant.SEARCH] = search
         ApiConfig.RequestToVolley({ result, response ->
             if (result) {
                 try {
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getBoolean(Constant.SUCCESS)) {
-                        Log.d("user", response)
+                        Log.d("user",response)
                         val jsonArray: JSONArray = jsonObject.getJSONArray(Constant.DATA)
                         val g = Gson()
                         val userList: ArrayList<User> = ArrayList<User>()
@@ -86,10 +68,8 @@ class FindFriendsFragment : Fragment() {
                                 break
                             }
                         }
-                        binding.recycler.adapter = UserAdapter(activity, userList,"send"){
-                            findFriendsApi("")
-                        }
-                        binding.recycler.adapter =  binding.recycler.adapter
+                        val adapter = getActivity()?.let { UserAdapter(it, userList,"view"){} }
+                        _binding!!.recycler.setAdapter(adapter)
                     } else {
                         Toast.makeText(
                             activity,
@@ -101,6 +81,7 @@ class FindFriendsFragment : Fragment() {
                     e.printStackTrace()
                 }
             }
-        }, activity, Constant.USER_LIST_URL, params, true)
+        }, activity, Constant.MY_FRIENDLIST_URL, params, true)
+
     }
 }

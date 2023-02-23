@@ -26,7 +26,8 @@ import java.util.HashMap
 class UserAdapter(
     private val activity: Activity,
     private val userList: List<User>,
-    private val type: String
+    private val type: String,
+    private val onFriendRequestSent: () -> Unit // call
 ) : RecyclerView.Adapter<UserAdapter.UserViewHolder>() {
 
 
@@ -89,6 +90,7 @@ class UserAdapter(
                     val jsonObject = JSONObject(response)
                     if (jsonObject.getBoolean(Constant.SUCCESS)) {
                         Toast.makeText(activity,jsonObject.getString(Constant.MESSAGE),Toast.LENGTH_SHORT).show()
+                        onFriendRequestSent.invoke()
                     }
                 } catch (e: Exception) {
                     e.printStackTrace()
